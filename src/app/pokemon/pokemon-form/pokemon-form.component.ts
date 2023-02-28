@@ -9,8 +9,7 @@ import { PokemonService } from '../pokemon.service';
   styleUrls: ['./pokemon-form-component.css']
 })
 export class PokemonFormComponent implements OnInit {
-  @Input()
-  pokemon!: Pokemon;
+  @Input()pokemon!: Pokemon;
   types!: string[];
 
   constructor(private pokemonService: PokemonService, private router: Router) { }
