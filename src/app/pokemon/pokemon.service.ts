@@ -1,7 +1,6 @@
-import { HttpClient} from '@angular/common/http';
+import { HttpClient, HttpHeaders} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, of, tap } from 'rxjs';
-import { POKEMONS } from './mock-pokemon-list';
 import { Pokemon } from './pokemon';
 
 @Injectable()
@@ -9,19 +8,51 @@ export class PokemonService {
 
   constructor(private http: HttpClient){}
 
+/* Methode qui permet de recuperer la liste des pokemons */
+
   getPokemonList(): Observable<Pokemon[]> {
     return this.http.get<Pokemon[]>('api/pokemons').pipe(
-      tap((pokemonList) => console.table(pokemonList)),
-      catchError((error) => {
-        console.log(error);
-        return of([]);
-      })
-    )
+      tap((response) => console.table(response)),
+      catchError((error) => this.handleError(error,undefined))
+    );
   }
 
-  getPokemonById(pokemonId : number): Pokemon|undefined {
-    return POKEMONS.find(pokemon => pokemon.id == pokemonId);
-  }
+
+  
+/* Methode qui permet de recuperer un pokemon grâce à son ID */
+getPokemonById(pokemonId : number): Observable<Pokemon|undefined> {
+  return this.http.get<Pokemon>(`api/pokemons/${pokemonId}`).pipe(
+    tap((response) => console.log(response)),
+    catchError((error) => this.handleError(error,undefined))
+  );
+}
+
+/**Methode qui permet de sauvegarder les changements effectués
+ * pour un pokémon
+ */
+updatePokemon(pokemon: Pokemon): Observable<null> {
+  const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type' : 'application/json'})
+  };
+
+  return this.http.put('api/pokemons', pokemon , httpOptions).pipe(
+    tap((response) => this.log(response)),
+    catchError((error) => this.handleError(error,null))
+  );
+}
+
+
+/** Methode pour la gestion des erreurs afin d'éviter 
+ * la multiplication du code
+ */
+private log(response: any){
+  console.table(response);
+}
+
+private handleError(error: Error, errorValue: any){
+  console.error(error);
+  return of(errorValue);
+}
 
   getPokemonTypeList() : string[] {
     return [
