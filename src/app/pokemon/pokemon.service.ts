@@ -27,6 +27,21 @@ getPokemonById(pokemonId : number): Observable<Pokemon|undefined> {
   );
 }
 
+/**Methode qui permet de rechercher un pokemon */
+
+searchPokemonList(term: string): Observable<Pokemon[]>{
+  if(term.length <= 1 ){
+    return of ([]);
+  }
+
+  return this.http.get<Pokemon[]>(`api/pokemons/?name=${term}`).pipe(
+    tap((response) => console.log(response)),
+    catchError((error) => this.handleError(error,[]))
+  )
+}
+
+
+
 /**Methode qui permet de sauvegarder les changements effectués
  * pour un pokémon
  */
