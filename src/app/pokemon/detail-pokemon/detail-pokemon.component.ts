@@ -28,6 +28,15 @@ export class DetailPokemonComponent implements OnInit {
     } 
   }
 
+  /**Methode pour supprimer un pokemon et le rediriger sur la page 
+   * après la suppression
+   */
+
+  deletePokemon(pokemon: Pokemon){
+    this.pokemonService.deletePokemonById(pokemon.id)
+      .subscribe(() => this.goToPokemonList());
+  }
+
   goToPokemonList(){
     this.router.navigate(['/pokemons']);
   }

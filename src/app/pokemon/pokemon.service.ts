@@ -41,6 +41,27 @@ updatePokemon(pokemon: Pokemon): Observable<null> {
   );
 }
 
+/**Methode permettant d'ajouter un pokemon */
+
+addPokemon(pokemon : Pokemon): Observable<null> {
+  const httpOptions = {
+    headers: new HttpHeaders({ 'Content-Type' : 'application/json'})
+  };
+
+  return this.http.post('api/pokemons', pokemon, httpOptions).pipe(
+    tap((response) => this.log(response)),
+    catchError((error) => this.handleError(error, null))
+  );
+}
+
+/**Methode permettant de supprimer un pokemon */
+
+deletePokemonById(pokemonId: number): Observable<null> {
+  return this.http.delete(`api/pokemons/${pokemonId}`).pipe(
+    tap((response) => this.log(response)),
+    catchError((error) => this.handleError(error,null))
+  );
+}
 
 /** Methode pour la gestion des erreurs afin d'éviter 
  * la multiplication du code
